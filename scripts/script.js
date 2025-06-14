@@ -1,46 +1,4 @@
-// function togglePassword() {
-//   const passField = document.getElementById("password");
-//   if (passField.type === "password") {
-//     passField.type = "text";
-//   } else {
-//     passField.type = "password";
-//   }
-// }
-
-// // function login() {
-// //   alert("Logged in! Redirecting to dashboard...");
-// //   // Simulate login success
-// //   window.location.href = "dashboard.html"; // Replace this as needed
-// //   return false;
-// // }
-
-// import { auth } from './firebase-config.js';
-//     import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-
-//     window.togglePassword = function () {
-//       const passField = document.getElementById("password");
-//       passField.type = passField.type === "password" ? "text" : "password";
-//     };
-
-//     const form = document.getElementById("login-form");
-
-//     form.addEventListener("submit", (e) => {
-//       e.preventDefault();
-//       const email = form.email.value;
-//       const password = form.password.value;
-
-//       signInWithEmailAndPassword(auth, email, password)
-//         .then(userCredential => {
-//           alert("Login successful!");
-//           window.location.href = "dashboard.html";
-//         })
-//         .catch(error => {
-//           alert("Login failed: " + error.message);
-//         });
-//     });
-
-// firebase-login.js
-import { auth } from './firebase-config.js';
+import { auth } from "./firebase-config.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 // Toggle password visibility
@@ -59,16 +17,35 @@ form.addEventListener("submit", (e) => {
   const messageBox = document.getElementById("login-message");
 
   signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      // messageBox.textContent = "✅ Login successful! Redirecting...";
-      // messageBox.style.color = "green";
-      // setTimeout(() => {
-      //   window.location.href = "dashboard.html";
-      // }, 1500);
+    .then((userCredential) => {
       window.location.href = "dashboard.html";
     })
-    .catch(error => {
-      messageBox.textContent = "❌ Login failed: Invalid email or password.";
+    .catch((error) => {
+      const messageBox = document.getElementById("login-message");
+
+      let userMessage = "";
+      switch (error.code) {
+        case "auth/invalid-email":
+          userMessage = "⚠️ Please enter a valid email address.";
+          break;
+        case "auth/user-not-found":
+          userMessage = "❌ No account found with that email.";
+          break;
+        case "auth/wrong-password":
+          userMessage = "❌ Incorrect password. Try again.";
+          break;
+        case "auth/too-many-requests":
+          userMessage = "⚠️ Too many attempts. Please try again later.";
+          break;
+        case "auth/invalid-credential":
+          userMessage = "⚠️ Invalid credentials. Please check your email and password.";
+          break;
+        default:
+          userMessage = "❌ Login failed: " + error.message;
+          break;
+      }
+
+      messageBox.textContent = userMessage;
       messageBox.style.color = "red";
     });
 });
