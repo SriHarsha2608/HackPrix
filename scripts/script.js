@@ -50,7 +50,6 @@
 //     });
 // });
 
-
 // import { auth } from "./firebase-config.js";
 // import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
@@ -114,17 +113,19 @@
 //     });
 // });
 
-
 import { auth } from "./firebase-config.js";
 import {
   signInWithEmailAndPassword,
   sendEmailVerification,
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-// Toggle password visibility
 window.togglePassword = function () {
   const passField = document.getElementById("password");
-  passField.type = passField.type === "password" ? "text" : "password";
+  const toggleIcon = document.getElementById("togglePassword");
+
+  const isPassword = passField.type === "password";
+  passField.type = isPassword ? "text" : "password";
+  toggleIcon.textContent = isPassword ? "🙈" : "👁";
 };
 
 const form = document.getElementById("login-form");
@@ -147,7 +148,8 @@ form.addEventListener("submit", (e) => {
 
       if (!user.emailVerified) {
         unverifiedUser = user;
-        messageBox.textContent = "📧 Please verify your email before logging in.";
+        messageBox.textContent =
+          "📧 Please verify your email before logging in.";
         messageBox.style.color = "orange";
         resendBtn.style.display = "inline-block";
         return;
@@ -175,7 +177,8 @@ form.addEventListener("submit", (e) => {
           userMessage = "⚠️ Too many attempts. Please try again later.";
           break;
         case "auth/invalid-credential":
-          userMessage = "⚠️ Invalid credentials. Please check your email and password.";
+          userMessage =
+            "⚠️ Invalid credentials. Please check your email and password.";
           break;
         default:
           userMessage = "❌ Login failed: " + error.message;
@@ -211,7 +214,8 @@ resendBtn.addEventListener("click", () => {
 
     sendEmailVerification(unverifiedUser)
       .then(() => {
-        messageBox.textContent = "✅ Verification email resent. Please check your inbox.";
+        messageBox.textContent =
+          "✅ Verification email resent. Please check your inbox.";
         messageBox.style.color = "green";
 
         // Delay before re-enabling the button (e.g., 30 seconds)
@@ -242,3 +246,47 @@ resendBtn.addEventListener("click", () => {
   }
 });
 
+import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+const forgotPasswordLink = document.getElementById("forgot-password-link");
+const forgotPasswordSection = document.getElementById(
+  "forgot-password-section"
+);
+const resetEmailInput = document.getElementById("reset-email");
+const resetPasswordBtn = document.getElementById("reset-password-btn");
+
+forgotPasswordLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  forgotPasswordSection.style.display = "block";
+});
+
+resetPasswordBtn.addEventListener("click", () => {
+  const email = resetEmailInput.value.trim();
+  if (!email) {
+    messageBox.textContent = "⚠️ Please enter your email address.";
+    messageBox.style.color = "orange";
+    return;
+  }
+
+  resetPasswordBtn.disabled = true;
+  resetPasswordBtn.textContent = "Sending...";
+
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      messageBox.textContent =
+        "✅ Password reset email sent! Please check your inbox.";
+      messageBox.style.color = "green";
+      resetPasswordBtn.style.display = "none";
+    })
+    .catch((error) => {
+      let msg = "❌ Error: " + error.message;
+      if (error.code === "auth/user-not-found") {
+        msg = "❌ If this email is registered, a reset link will be sent.";
+      }
+
+      messageBox.textContent = msg;
+      messageBox.style.color = "red";
+      resetPasswordBtn.disabled = false;
+      resetPasswordBtn.textContent = "Send Reset Link";
+    });
+});

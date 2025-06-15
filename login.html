@@ -41,12 +41,13 @@
                 <label for="password">Password</label>
                 <div class="password-field">
                     <input type="password" name="password" placeholder="Enter your password" id="password" required />
-                    <span class="toggle" onclick="togglePassword()">👁</span>
+                    <span class="toggle" id="togglePassword" onclick="togglePassword()">👁</span>
                 </div>
+
 
                 <div class="options">
                     <label><input type="checkbox" /> Remember me</label>
-                    <a href="#">Forgot password?</a>
+                    <a href="#" id="forgot-password-link">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="signin-btn">Sign in</button>
@@ -62,6 +63,12 @@
                     Don't have an account? <a href="signup.html">Sign up for free</a>
                 </p>
             </form>
+            <div id="forgot-password-section" style="display: none; margin-top: 1rem;">
+                <label for="reset-email">Enter your email to reset password</label>
+                <input type="email" id="reset-email" placeholder="Enter your email" />
+                <button type="button" class="resend-btn" id="reset-password-btn">Send Reset Link</button>
+            </div>
+
         </div>
     </div>
     <script type="module" src="scripts/script.js"></script>
