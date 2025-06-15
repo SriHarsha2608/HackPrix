@@ -1,15 +1,12 @@
-// --- Imports ---
 import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 import { doc, getDoc, collection, addDoc, getDocs, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
-// --- Global Variables ---
 let currentUser = null;
 let tripData = null;
-let tripMembers = []; // Will store member data {id, name, ...}
+let tripMembers = [];
 const tripId = localStorage.getItem('currentTripId');
 
-// --- Auth Guard and Initial Load ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
         currentUser = user;
@@ -36,21 +33,18 @@ async function loadTripDetails() {
 
     tripData = tripDoc.data();
 
-    // Client-side security check
     if (!tripData.members.includes(currentUser.uid)) {
         alert("Access Denied: You are not a member of this trip.");
         window.location.href = 'dashboard.html';
         return;
     }
 
-    // Populate the page with trip data
     document.querySelector('h1').textContent = tripData.name;
     const summary = document.querySelector('.trip-summary');
     summary.querySelector('.value').textContent = tripData.location; // First value
     summary.querySelectorAll('.value')[1].textContent = `${tripData.startDate} - ${tripData.endDate}`;
     summary.querySelectorAll('.value')[2].textContent = `${tripData.members.length} people`;
     
-    // Fetch member details and then load expenses
     await loadTripMembers();
     loadExpenses();
 }
@@ -58,13 +52,11 @@ async function loadTripDetails() {
 async function loadTripMembers() {
     if (!tripData || tripData.members.length === 0) return;
     
-    // Fetch documents for all member UIDs
     const membersQuery = query(collection(db, 'users'), where('uid', 'in', tripData.members));
     const membersSnapshot = await getDocs(membersQuery);
     
     tripMembers = membersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
-    // Now that we have members, populate the modals
     populateExpenseModalDropdowns();
 }
 
@@ -107,7 +99,6 @@ async function loadExpenses() {
         expensesList.appendChild(expenseCard);
     });
     
-    // Update total spent in summary
     document.querySelector('.total-spent').textContent = `$${totalSpent.toFixed(2)}`;
 }
 
@@ -164,10 +155,10 @@ async function handleAddExpense(event) {
     }
 }
 
-// --- Event Listeners and Global Functions ---
+
 document.getElementById('expenseForm').addEventListener('submit', handleAddExpense);
 
-// Modal functions
+
 window.addExpense = function() {
     document.getElementById('expenseModal').style.display = 'block';
     document.getElementById('expenseDate').valueAsDate = new Date();
@@ -177,7 +168,5 @@ window.closeExpenseModal = function() {
     document.getElementById('expenseForm').reset();
 };
 window.addFriend = function() {
-    // This is more complex now. You'd open a modal to invite a friend
-    // which would add their UID to the trip's `members` array.
     alert('Add Friends to Trip functionality requires inviting existing platform friends.');
 };

@@ -1,212 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TripMate - Dashboard</title>
-    <link rel="stylesheet" href="style.css" />
-</head>
-
-<body>
-    <header>
-        <div class="logo">💸 SplitWise</div>
-        <button class="logout-btn">↷ Logout</button>
-    </header>
-
-    <main class="dashboard">
-        <aside class="profile-card">
-            <div class="profile-photo-container">
-                <img src="images/default-avatar.png" alt="Profile" class="avatar" id="profilePhoto">
-                <button class="change-photo-btn" onclick="document.getElementById('photoInput').click()">
-                    <i class="fas fa-camera"></i>
-                </button>
-                <input type="file" id="photoInput" accept="image/*" style="display: none"
-                    onchange="changeProfilePhoto(event)">
-            </div>
-            <div class="profile-info">
-                <h2 id="userName">John Doe</h2>
-                <p id="userUsername">@johndoe</p>
-                <button class="btn-edit-profile" onclick="openEditProfileModal()">
-                    <i class="fas fa-edit"></i> Edit Profile
-                </button>
-            </div>
-            <p>john.doe@example.com</p>
-
-            <div class="info-box friends">
-                👥 Friends <span>12</span>
-            </div>
-            <div class="info-box trips">
-                📍 Trips <span>2</span>
-            </div>
-
-            <button class="btn invite" onclick="openInviteModal()">+ Invite Friend</button>
-            <button class="btn requests" onclick="openRequestsModal()">👥 Friend Requests</button>
-            <button class="btn create" onclick="openCreateTripModal()">+ Create Trip</button>
-        </aside>
-
-        <section class="trips-section">
-            <div class="trip-block">
-                <h3>🟢 Current Trips (<span id="currentTripsCount">1</span>)</h3>
-                <div id="currentTrips" class="trips-container">
-                    <div class="trip-card">
-                        <div class="trip-header">
-                            <h4>Weekend Getaway</h4>
-                            <span class="status ongoing">Ongoing</span>
-                        </div>
-                        <p>📍 San Francisco</p>
-                        <p>📅 6/15/2024 - 6/17/2024</p>
-                        <p>💰 $1250.50</p>
-                        <div class="trip-footer">
-                            <span>👥 4 people</span>
-                            <button onclick="toggleDetails(this)">View Details</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="trip-block">
-                <h3>🔵 Past Trips (<span id="pastTripsCount">1</span>)</h3>
-                <div id="pastTrips" class="trips-container">
-                    <div class="trip-card">
-                        <div class="trip-header">
-                            <h4>Beach Vacation</h4>
-                            <span class="status completed">Completed</span>
-                        </div>
-                        <p>📍 Miami</p>
-                        <p>📅 5/20/2024 - 5/25/2024</p>
-                        <p>💰 $2100.75</p>
-                        <div class="trip-footer">
-                            <span>👥 3 people</span>
-                            <button onclick="toggleDetails(this)">View Details</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-     Invite Friend Modal -->
-    <!-- <div id="inviteModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeInviteModal()">&times;</span>
-            <h2>Invite Friend</h2>
-            <form id="inviteForm" onsubmit="handleInvite(event)">
-                <div class="form-group">
-                    <label for="friendEmail">Friend's Email:</label>
-                    <input type="email" id="friendEmail" required placeholder="Enter friend's email">
-                </div>
-                <div class="form-group">
-                    <label for="friendName">Friend's Name:</label>
-                    <input type="text" id="friendName" required placeholder="Enter friend's name">
-                </div>
-                <button type="submit" class="btn">Send Invitation</button>
-            </form>
-        </div>
-    </div>
-
-     Create Trip Modal -->
-    <!-- <div id="createTripModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCreateTripModal()">&times;</span>
-            <h2>Create New Trip</h2>
-            <form id="createTripForm" onsubmit="handleCreateTrip(event)">
-                <div class="form-group">
-                    <label for="tripName">Trip Name:</label>
-                    <input type="text" id="tripName" required placeholder="Enter trip name">
-                </div>
-                <div class="form-group">
-                    <label for="tripLocation">Location:</label>
-                    <input type="text" id="tripLocation" required placeholder="Enter trip location">
-                </div>
-                <div class="form-group">
-                    <label for="startDate">Start Date:</label>
-                    <input type="date" id="startDate" required>
-                </div>
-                <div class="form-group">
-                    <label for="endDate">End Date:</label>
-                    <input type="date" id="endDate" required>
-                </div>
-                <button type="submit" class="btn">Create Trip</button>
-            </form>
-        </div>
-    </div>
-
-    
-    <div id="changePhotoModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeChangePhotoModal()">&times;</span>
-            <h2>Change Profile Photo</h2>
-            <form id="changePhotoForm" onsubmit="handlePhotoChange(event)">
-                <div class="form-group">
-                    <label for="photoFile">Choose Photo:</label>
-                    <input type="file" id="photoFile" accept="image/*">
-                </div>
-                <div class="preview-container">
-                    <img id="photoPreview" src="" alt="Preview" style="display: none;">
-                </div>
-                <div class="photo-actions">
-                    <button type="submit" class="btn">Update Photo</button>
-                    <button type="button" class="btn btn-secondary" onclick="removeProfilePhoto()">Remove Photo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="logoutModal" class="modal">
-        <div class="modal-content alert-modal">
-            <h2>Logout Confirmation</h2>
-            <p>Are you sure you want to logout?</p>
-            <div class="alert-actions">
-                <button class="btn btn-secondary" onclick="closeLogoutModal()">No, Stay</button>
-                <button class="btn btn-danger" onclick="confirmLogout()">Yes, Logout</button>
-            </div>
-        </div>
-    </div>
-
-    
-    <div id="requestsModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeRequestsModal()">&times;</span>
-            <h2>Friend Requests</h2>
-            <div id="requestsList" class="requests-list">
-                
-            </div>
-        </div>
-    </div>
-
-    
-    <div id="editProfileModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeEditProfileModal()">&times;</span>
-            <h2>Edit Profile</h2>
-            <form id="editProfileForm" onsubmit="saveProfileChanges(event)">
-                <div class="form-group">
-                    <label for="editName">Full Name</label>
-                    <input type="text" id="editName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editUsername">Username</label>
-                    <div class="username-input">
-                        <span class="username-prefix">@</span>
-                        <input type="text" id="editUsername" required>
-                    </div>
-                    <button type="button" class="btn-secondary" onclick="randomizeUsername()">
-                        <i class="fas fa-random"></i> Generate Random Username
-                    </button>
-                </div>
-                <button type="submit" class="btn-primary">Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    
-    <script type="module" src="scripts/firebase-config.js"></script>
-    <script type="module" src="scripts/dashboard.js"></script>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -215,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TripMate - Dashboard</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -241,7 +31,6 @@
                     <i class="fas fa-edit"></i> Edit Profile
                 </button>
             </div>
-            <!-- Corrected: Added an ID to this element for reliable updates -->
             <p id="userEmail">user@example.com</p>
 
             <div class="info-box friends">
@@ -260,20 +49,17 @@
             <div class="trip-block">
                 <h3>🟢 Current Trips (<span id="currentTripsCount">0</span>)</h3>
                 <div id="currentTrips" class="trips-container">
-                    <!-- Trips will be loaded dynamically -->
                 </div>
             </div>
 
             <div class="trip-block">
                 <h3>🔵 Past Trips (<span id="pastTripsCount">0</span>)</h3>
                 <div id="pastTrips" class="trips-container">
-                    <!-- Trips will be loaded dynamically -->
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Invite Friend Modal -->
     <div id="inviteModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeInviteModal()">×</span>
@@ -283,13 +69,11 @@
                     <label for="friendEmail">Friend's Email:</label>
                     <input type="email" id="friendEmail" required placeholder="Enter friend's email">
                 </div>
-                <!-- Corrected: Removed the unused 'Friend's Name' input -->
                 <button type="submit" class="btn">Send Invitation</button>
             </form>
         </div>
     </div>
 
-    <!-- Create Trip Modal -->
     <div id="createTripModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeCreateTripModal()">×</span>
@@ -316,7 +100,6 @@
         </div>
     </div>
 
-    <!-- Change Photo Modal -->
     <div id="changePhotoModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeChangePhotoModal()">×</span>
@@ -324,7 +107,6 @@
             <form id="changePhotoForm">
                 <div class="form-group">
                     <label for="photoFile">Choose Photo:</label>
-                    <!-- This hidden input will be populated by the main photoInput -->
                     <input type="file" id="photoFile" accept="image/*" style="display:none;">
                      <p>A preview will be shown below. Click 'Update Photo' to save.</p>
                 </div>
@@ -338,7 +120,6 @@
         </div>
     </div>
 
-    <!-- Logout Confirmation Modal -->
     <div id="logoutModal" class="modal">
         <div class="modal-content alert-modal">
             <h2>Logout Confirmation</h2>
@@ -350,18 +131,15 @@
         </div>
     </div>
 
-    <!-- Friend Requests Modal -->
     <div id="requestsModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeRequestsModal()">×</span>
             <h2>Friend Requests</h2>
             <div id="requestsList" class="requests-list">
-                <!-- Friend requests will be added here dynamically -->
             </div>
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
     <div id="editProfileModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeEditProfileModal()">×</span>
