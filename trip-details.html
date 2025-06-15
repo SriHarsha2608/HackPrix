@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip Details - Weekend Getaway</title>
+  <link rel="stylesheet" href="trip-details.css" />
+</head>
+
+<body>
+  <nav class="nav-back">
+    <a href="dashboard.html">&larr; Back to Trips</a>
+  </nav>
+  <main class="trip-details-main">
+    <h1>Weekend Getaway</h1>
+    <section class="trip-summary">
+      <div>
+        <span>📍</span>
+        <div>
+          <div class="label">Destination</div>
+          <div class="value">San Francisco</div>
+        </div>
+      </div>
+      <div>
+        <span>📅</span>
+        <div>
+          <div class="label">Duration</div>
+          <div class="value">6/15/2024 - 6/17/2024</div>
+        </div>
+      </div>
+      <div>
+        <span>👥</span>
+        <div>
+          <div class="label">Participants</div>
+          <div class="value">4 people</div>
+        </div>
+      </div>
+      <div>
+        <span>💰</span>
+        <div>
+          <div class="label">Total Spent</div>
+          <div class="value total-spent">$1250.50</div>
+        </div>
+      </div>
+    </section>
+    <section class="trip-content">
+      <div class="expenses-section">
+        <div class="expenses-header">
+          <h2>Expenses by Category</h2>
+          <div>
+            <button class="btn-secondary" onclick="addFriend()">+ Add Friends</button>
+            <button class="btn-primary" onclick="addExpense()">+ Add Expense</button>
+          </div>
+        </div>
+        <div id="expenses-list">
+          <!-- Expenses will be rendered here -->
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="pay-friends">
+          <h3>Have to Pay Friends (2)</h3>
+          <div class="friend-owe">
+            <div class="avatar red">AJ</div>
+            <div>
+              <div class="friend-name">Alice Johnson</div>
+              <div class="owe-label">You owe $262.75</div>
+            </div>
+            <button class="btn-primary small" onclick="markAsPaid(this)" data-friend-id="1">Mark as Paid</button>
+          </div>
+          <div class="friend-owe">
+            <div class="avatar red">CW</div>
+            <div>
+              <div class="friend-name">Carol White</div>
+              <div class="owe-label">You owe $291.25</div>
+            </div>
+            <button class="btn-primary small" onclick="markAsPaid(this)" data-friend-id="2">Mark as Paid</button>
+          </div>
+        </div>
+        <div class="paid-friends">
+          <h3>Paid to Friends (1)</h3>
+          <div class="friend-paid">
+            <div class="avatar green">BS</div>
+            <div>
+              <div class="friend-name">Bob Smith</div>
+              <div class="paid-label">Owes you $216.50</div>
+            </div>
+          </div>
+        </div>
+        <div class="payment-confirmations">
+          <h3>Payment Confirmations</h3>
+          <div id="confirmations-list">
+            <!-- Confirmations will be rendered here -->
+          </div>
+        </div>
+        <div class="your-balance">
+          <h3>Your Balance</h3>
+          <div class="balance-amount">+ $337.50</div>
+          <div class="balance-label">You are owed money</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Expense Modal -->
+  <div id="expenseModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeExpenseModal()">&times;</span>
+      <h2>Add New Expense</h2>
+      <form id="expenseForm" onsubmit="handleAddExpense(event)">
+        <div class="form-group">
+          <label for="expenseTitle">Title:</label>
+          <input type="text" id="expenseTitle" required placeholder="e.g., Hotel, Dinner, etc.">
+        </div>
+        <div class="form-group">
+          <label for="expenseAmount">Amount ($):</label>
+          <input type="number" id="expenseAmount" step="0.01" required placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label for="expenseCategory">Category:</label>
+          <select id="expenseCategory" required>
+            <option value="">Select a category</option>
+            <option value="accommodation">Accommodation</option>
+            <option value="transportation">Transportation</option>
+            <option value="food">Food & Drinks</option>
+            <option value="activities">Activities</option>
+            <option value="shopping">Shopping</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="expenseDate">Date:</label>
+          <input type="date" id="expenseDate" required>
+        </div>
+        <div class="form-group">
+          <label for="expensePaidBy">Paid by:</label>
+          <select id="expensePaidBy" required>
+            <option value="">Select who paid</option>
+            <!-- Will be populated dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Split between:</label>
+          <div id="splitMembers" class="split-members">
+            <!-- Will be populated dynamically -->
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Add Expense</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Friend Modal -->
+  <div id="friendModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeFriendModal()">&times;</span>
+      <h2>Add Friend to Trip</h2>
+      <form id="friendForm" onsubmit="handleAddFriend(event)">
+        <div class="form-group">
+          <label for="friendName">Friend's Name:</label>
+          <input type="text" id="friendName" required placeholder="Enter friend's name">
+        </div>
+        <div class="form-group">
+          <label for="friendEmail">Friend's Email:</label>
+          <input type="email" id="friendEmail" required placeholder="Enter friend's email">
+        </div>
+        <div class="form-group">
+          <label for="friendInitials">Initials (for avatar):</label>
+          <input type="text" id="friendInitials" maxlength="2" required placeholder="e.g., JD">
+          <small>Enter 2 letters for the avatar (e.g., JD for John Doe)</small>
+        </div>
+        <button type="submit" class="btn-primary">Add Friend</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment Confirmation Modal -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeConfirmationModal()">&times;</span>
+      <h2>Payment Confirmation</h2>
+      <form id="confirmationForm" onsubmit="handleConfirmation(event)">
+        <div class="form-group">
+          <label for="paymentMethod">Payment Method:</label>
+          <select id="paymentMethod" required>
+            <option value="">Select payment method</option>
+            <option value="cash">Cash</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="paypal">PayPal</option>
+            <option value="venmo">Venmo</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="confirmationNote">Note (optional):</label>
+          <textarea id="confirmationNote" placeholder="Add any additional details about the payment"></textarea>
+        </div>
+        <input type="hidden" id="confirmationFriendId">
+        <input type="hidden" id="confirmationAmount">
+        <button type="submit" class="btn-primary">Send Confirmation</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="trip-details.js"></script>
+</body>
+
+</html>
